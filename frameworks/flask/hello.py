@@ -19,7 +19,7 @@ if __name__ == "__main__":
     host, port = sys.argv[1], sys.argv[2]
     cmd = (
         f"{gunicorn} hello:app "
-        f"-w {cpu_count()} "
+        f"-w {2 * cpu_count() + 1} "
         f"--worker-class='egg:meinheld#gunicorn_worker' "
         f"-b {host}:{port}"
     )

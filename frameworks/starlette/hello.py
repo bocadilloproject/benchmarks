@@ -3,23 +3,15 @@ from multiprocessing import cpu_count
 from os.path import dirname, join
 from subprocess import Popen, DEVNULL, STDOUT
 
+from starlette.applications import Starlette
+from starlette.responses import PlainTextResponse
 
-class App:
-    def __init__(self, scope):
-        self.scope = scope
+app = Starlette()
 
-    async def __call__(self, receive, send):
-        await send({
-            "type": "http.response.start",
-            "status": 200,
-            "headers": [
-                [b"content-type", b"text/plain"],
-            ],
-        })
-        await send({
-            "type": "http.response.body",
-            "body": b"Hello, World!",
-        })
+
+@app.route("/")
+async def index(request):
+    return PlainTextResponse("Hello, World!")
 
 
 if __name__ == "__main__":
@@ -27,7 +19,7 @@ if __name__ == "__main__":
     gunicorn = join(dirname(sys.executable), "gunicorn")
     host, port = sys.argv[1], sys.argv[2]
     cmd = (
-        f"{gunicorn} hello:App "
+        f"{gunicorn} hello:app "
         f"-w {2 * cpu_count() + 1} "
         "-k uvicorn.workers.UvicornWorker "
         f"-b {host}:{port}"

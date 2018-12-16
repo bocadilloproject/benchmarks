@@ -19,7 +19,7 @@ if __name__ == "__main__":
     host, port = sys.argv[1], sys.argv[2]
     cmd = (
         f"{gunicorn} hello:api "
-        f"-w {cpu_count()} "
+        f"-w {2 * cpu_count() + 1} "
         "-k uvicorn.workers.UvicornWorker "
         f"-b {host}:{port}"
     )

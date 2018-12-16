@@ -15,7 +15,18 @@
   ],
   "frameworks": [
     {
+      "name": "Starlette",
+      "enabled": true,
+      "requirements": [
+        "starlette",
+        "uvicorn",
+        "gunicorn"
+      ],
+      "dirname": "starlette"
+    },
+    {
       "name": "Bocadillo",
+      "enabled": true,
       "requirements": [
         "bocadillo",
         "gunicorn"
@@ -24,6 +35,7 @@
     },
     {
       "name": "Flask",
+      "enabled": true,
       "requirements": [
         "flask",
         "gunicorn",
@@ -33,6 +45,7 @@
     },
     {
       "name": "Uvicorn",
+      "enabled": true,
       "requirements": [
         "uvicorn",
         "gunicorn"
