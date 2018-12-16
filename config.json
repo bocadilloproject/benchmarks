@@ -24,6 +24,16 @@
   ],
   "frameworks": [
     {
+      "name": "Flask",
+      "enabled": true,
+      "requirements": [
+        "flask==1.0.2",
+        "gunicorn==19.9.0",
+        "meinheld==0.6.1"
+      ],
+      "dirname": "flask"
+    },
+    {
       "name": "Django",
       "enabled": true,
       "requirements": [
@@ -32,6 +42,15 @@
         "meinheld==0.6.1"
       ],
       "dirname": "django"
+    },
+    {
+      "name": "Uvicorn",
+      "enabled": true,
+      "requirements": [
+        "uvicorn==0.3.20",
+        "gunicorn==19.9.0"
+      ],
+      "dirname": "uvicorn"
     },
     {
       "name": "Starlette",
@@ -44,34 +63,6 @@
       "dirname": "starlette"
     },
     {
-      "name": "Bocadillo",
-      "enabled": true,
-      "requirements": [
-        "bocadillo==0.7.0",
-        "gunicorn==19.9.0"
-      ],
-      "dirname": "bocadillo"
-    },
-    {
-      "name": "Flask",
-      "enabled": true,
-      "requirements": [
-        "flask==1.0.2",
-        "gunicorn==19.9.0",
-        "meinheld==0.6.1"
-      ],
-      "dirname": "flask"
-    },
-    {
-      "name": "Uvicorn",
-      "enabled": true,
-      "requirements": [
-        "uvicorn==0.3.20",
-        "gunicorn==19.9.0"
-      ],
-      "dirname": "uvicorn"
-    },
-    {
       "name": "Responder",
       "enabled": true,
       "requirements": [
@@ -80,6 +71,15 @@
         "gunicorn==19.9.0"
       ],
       "dirname": "responder"
+    },
+    {
+      "name": "Bocadillo",
+      "enabled": true,
+      "requirements": [
+        "bocadillo==0.7.0",
+        "gunicorn==19.9.0"
+      ],
+      "dirname": "bocadillo"
     }
   ]
 }
