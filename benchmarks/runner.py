@@ -10,7 +10,7 @@ from psutil import Process
 
 from benchmarks.config import Config, Test, Framework
 from benchmarks.utils import wait_online, kill_recursively, \
-    wait_offline
+    wait_offline, get_wrk_reqs_per_second
 
 
 class Runner:
@@ -27,10 +27,15 @@ class Runner:
         handler.setFormatter(formatter)
         self._logger.addHandler(handler)
 
-    def _run(self, command: str, timeout: int = 30):
+    def _run(self, command: str, timeout: int = 30,
+             pipe: bool = False) -> subprocess.Popen:
         self._logger.info(f"Running: %s", command)
-        p = subprocess.Popen(command, shell=True)
+        kwargs = {}
+        if pipe:
+            kwargs['stdout'] = subprocess.PIPE
+        p = subprocess.Popen(command, shell=True, **kwargs)
         p.wait(timeout)
+        return p
 
     def get_python(self, framework: Framework) -> str:
         env_dir = framework.name.replace(' ', '_').lower()
@@ -47,9 +52,10 @@ class Runner:
 
         return python
 
-    def warm_up(self, framework: Framework):
+    def wait(self, framework: Framework, up=True):
         seconds = self.config.warmup_seconds
-        self._logger.info(f"Warming up %s for %ss", framework.name, seconds)
+        action = "Warming up" if up else "Cooling down"
+        self._logger.info(f"%s %s for %ss", action, framework.name, seconds)
         sleep(seconds)
 
     @contextmanager
@@ -63,7 +69,7 @@ class Runner:
 
         try:
             wait_online(host, port)
-            self.warm_up(framework)
+            self.wait(framework, up=True)
             yield
         except TimeoutError as e:
             self._logger.exception(e)
@@ -88,12 +94,21 @@ class Runner:
                     f"{host}:{port} (framework: {framework.name})"
                 )
             finally:
-                self.warm_up(framework)
+                self.wait(framework, up=False)
 
-    def benchmark(self, script: str, framework: Framework, test: Test) -> int:
+    def benchmark(self, script: str, framework: Framework) -> int:
         with self.server(script, framework):
-            # TODO run wrk
-            return 0
+            duration = self.config.wrk_duration
+            cmd = (
+                f"wrk "
+                f"-c {self.config.wrk_concurrency} "
+                f"-t {self.config.wrk_threads} "
+                f"http://{self.config.address}/ "
+                f"-d {duration}"
+            )
+            p = self._run(cmd, timeout=duration + 2, pipe=True)
+            output = p.stdout.read().decode()
+            return get_wrk_reqs_per_second(output)
 
     def run(self) -> dict:
         scores = defaultdict(defaultdict)
@@ -109,7 +124,7 @@ class Runner:
                 print(f"Starting test: {test.name}")
                 print()
                 script_path = join(directory, test.filename)
-                score = self.benchmark(script_path, framework, test)
+                score = self.benchmark(script_path, framework)
                 scores[test.name][framework.name] = score
 
         return self.format_scores(scores)

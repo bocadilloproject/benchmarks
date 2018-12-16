@@ -7,6 +7,14 @@
   ],
   "frameworks": [
     {
+      "name": "Bocadillo",
+      "requirements": [
+        "bocadillo",
+        "gunicorn"
+      ],
+      "dirname": "bocadillo"
+    },
+    {
       "name": "Flask",
       "requirements": [
         "flask",
@@ -14,13 +22,6 @@
         "meinheld"
       ],
       "dirname": "flask"
-    },
-    {
-      "name": "Bocadillo",
-      "requirements": [
-        "bocadillo"
-      ],
-      "dirname": "bocadillo"
     }
   ]
 }

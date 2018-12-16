@@ -1,5 +1,5 @@
 import sys
-from os import cpu_count
+from multiprocessing import cpu_count
 from os.path import join, dirname
 from subprocess import Popen, PIPE
 
@@ -13,7 +13,7 @@ def hello():
     return "Hello, World!", 200
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     cwd = dirname(__file__)
     gunicorn = join(dirname(sys.executable), 'gunicorn')
     host, port = sys.argv[1], sys.argv[2]

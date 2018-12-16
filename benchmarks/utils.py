@@ -1,6 +1,9 @@
+import re
 import socket
 from psutil import Process, NoSuchProcess
 from time import time, sleep
+
+wrk_regex = re.compile('Requests/sec: (.*?)\\n')
 
 
 def wait_online(host: str, port: int, timeout: int = 10) -> None:
@@ -48,3 +51,9 @@ def kill_recursively(p: Process):
         p.kill()
     except NoSuchProcess:
         pass
+
+
+def get_wrk_reqs_per_second(text: str) -> int:
+    result = wrk_regex.search(text)
+    req_per_seconds = result.group(1).strip()
+    return int(float(req_per_seconds))
