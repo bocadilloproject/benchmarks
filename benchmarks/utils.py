@@ -55,5 +55,8 @@ def kill_recursively(p: Process):
 
 def get_wrk_reqs_per_second(text: str) -> int:
     result = wrk_regex.search(text)
+    assert result is not None, (
+        "unable to find Requests/sec in wrk output: " + text
+    )
     req_per_seconds = result.group(1).strip()
     return int(float(req_per_seconds))

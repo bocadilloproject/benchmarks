@@ -1,7 +1,7 @@
 import sys
 from multiprocessing import cpu_count
 from os.path import join, dirname
-from subprocess import Popen, PIPE
+from subprocess import Popen, DEVNULL, STDOUT
 
 from flask import Flask
 
@@ -23,5 +23,5 @@ if __name__ == "__main__":
         f"--worker-class='egg:meinheld#gunicorn_worker' "
         f"-b {host}:{port}"
     )
-    p = Popen(cmd, shell=True, cwd=cwd, stdout=PIPE, stderr=PIPE)
+    p = Popen(cmd, cwd=cwd, shell=True, stdout=DEVNULL, stderr=STDOUT)
     p.wait()

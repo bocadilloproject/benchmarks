@@ -8,9 +8,10 @@ from time import sleep
 
 from psutil import Process
 
-from benchmarks.config import Config, Test, Framework
-from benchmarks.utils import wait_online, kill_recursively, \
-    wait_offline, get_wrk_reqs_per_second
+from benchmarks.config import Config, Framework
+from benchmarks.utils import (
+    wait_online, kill_recursively, wait_offline, get_wrk_reqs_per_second,
+)
 
 
 class Runner:
@@ -28,11 +29,12 @@ class Runner:
         self._logger.addHandler(handler)
 
     def _run(self, command: str, timeout: int = 30,
-             pipe: bool = False) -> subprocess.Popen:
+             pipe: bool = True) -> subprocess.Popen:
         self._logger.info(f"Running: %s", command)
         kwargs = {}
         if pipe:
-            kwargs['stdout'] = subprocess.PIPE
+            kwargs['stdout'] = subprocess.DEVNULL
+            kwargs['stderr'] = subprocess.STDOUT
         p = subprocess.Popen(command, shell=True, **kwargs)
         p.wait(timeout)
         return p
