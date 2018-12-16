@@ -1,9 +1,3 @@
-import sys
-from multiprocessing import cpu_count
-from os.path import dirname, join
-from subprocess import Popen, DEVNULL, STDOUT
-
-
 class App:
     def __init__(self, scope):
         self.scope = scope
@@ -23,14 +17,11 @@ class App:
 
 
 if __name__ == "__main__":
-    cwd = dirname(__file__)
-    gunicorn = join(dirname(sys.executable), "gunicorn")
-    host, port = sys.argv[1], sys.argv[2]
-    cmd = (
-        f"{gunicorn} hello:App "
-        f"-w {2 * cpu_count() + 1} "
-        "-k uvicorn.workers.UvicornWorker "
-        f"-b {host}:{port}"
+    from os.path import dirname
+    from frameworks.common import run_gunicorn
+
+    run_gunicorn(
+        cwd=dirname(__file__),
+        app="hello:App",
+        worker="uvicorn",
     )
-    p = Popen(cmd, cwd=cwd, shell=True, stdout=DEVNULL, stderr=STDOUT)
-    p.wait()

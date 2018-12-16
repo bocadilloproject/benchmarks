@@ -1,8 +1,3 @@
-import sys
-from multiprocessing import cpu_count
-from os.path import dirname, join
-from subprocess import STDOUT, DEVNULL, Popen
-
 from bocadillo import API
 
 api = API()
@@ -14,14 +9,11 @@ async def hello(req, res):
 
 
 if __name__ == "__main__":
-    cwd = dirname(__file__)
-    gunicorn = join(dirname(sys.executable), 'gunicorn')
-    host, port = sys.argv[1], sys.argv[2]
-    cmd = (
-        f"{gunicorn} hello:api "
-        f"-w {2 * cpu_count() + 1} "
-        "-k uvicorn.workers.UvicornWorker "
-        f"-b {host}:{port}"
+    from os.path import dirname
+    from frameworks.common import run_gunicorn
+
+    run_gunicorn(
+        cwd=dirname(__file__),
+        app="hello:api",
+        worker="uvicorn",
     )
-    p = Popen(cmd, cwd=cwd, shell=True, stdout=DEVNULL, stderr=STDOUT)
-    p.wait()

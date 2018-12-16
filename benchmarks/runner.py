@@ -1,10 +1,12 @@
 import logging
+import os
 import shutil
 import subprocess
 from collections import defaultdict
 from contextlib import contextmanager
 from os.path import join, exists, dirname
 from time import sleep
+from typing import Tuple, List
 
 from psutil import Process
 
@@ -37,10 +39,13 @@ class Runner:
         p.wait(timeout)
         return p
 
-    def get_python(self, framework: Framework) -> str:
+    def get_python(self, framework: Framework) -> Tuple[str, str]:
         env_dir = framework.name.replace(" ", "_").lower()
         env_path = join(self.config.virtualenvs_dir, env_dir)
+
         python = join(env_path, "bin", "python3")
+        site_packages = join(dirname(dirname(python)), "lib", "python3.6")
+        path = ":".join([os.getcwd(), site_packages])
 
         if not exists(env_path):
             self._run(f"python -m venv {env_path}")
@@ -50,7 +55,7 @@ class Runner:
                 packages = " ".join(framework.requirements)
                 self._run(f"{pip} install -U {packages}", timeout=60)
 
-        return python
+        return python, path
 
     def wait(self, framework: Framework, up=True):
         seconds = self.config.warmup_seconds
@@ -61,11 +66,12 @@ class Runner:
     @contextmanager
     def server(self, script: str, framework: Framework):
         """Spawn and manage a process for the framework server."""
-        python = self.get_python(framework)
+        python, path = self.get_python(framework)
         host = self.config.host
         port = self.config.port
-        command = [python, script, host, str(port)]
-        p = subprocess.Popen(command, stdout=subprocess.PIPE)
+        env = f"PYTHONPATH={path}"
+        command = " ".join([env, python, script, host, str(port)])
+        p = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
 
         try:
             wait_online(host, port)
@@ -81,7 +87,7 @@ class Runner:
             self._logger.exception(e)
             raise Exception(
                 f"{script} encountered an unknown error "
-                f"(framework: {framework.name}"
+                f"(framework: {framework.name})"
             )
         finally:
             kill_recursively(Process(p.pid))
@@ -125,6 +131,8 @@ class Runner:
                 print()
                 script_path = join(directory, test.filename)
                 score = self.benchmark(script_path, framework)
+                print()
+                print("Score:", score)
                 scores[test.name][framework.name] = score
 
         return self.format_scores(scores)
