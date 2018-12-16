@@ -6,7 +6,8 @@ from collections import defaultdict
 from contextlib import contextmanager
 from os.path import join, exists, dirname
 from time import sleep
-from typing import Tuple, List
+from typing import Tuple, List, NamedTuple
+import pandas as pd
 
 from psutil import Process
 
@@ -117,7 +118,7 @@ class Runner:
             output = p.stdout.read().decode()
             return get_wrk_reqs_per_second(output)
 
-    def run(self) -> dict:
+    def run(self) -> pd.DataFrame:
         scores = {}
         num_benches = len(self.config.benches)
         for i, bench in enumerate(self.config.benches):
@@ -141,18 +142,23 @@ class Runner:
                     print()
                     bench_scores[test.name][framework.name] = score
 
-            scores[bench.id] = bench_scores
+            scores[bench] = bench_scores
 
-        return self.format_scores(scores)
+        return self.as_df(scores)
 
     @staticmethod
-    def format_scores(scores: dict) -> dict:
-        formatted = {}
-        for bench_id, bench_scores in scores.items():
-            formatted[bench_id] = {}
+    def as_df(scores: dict) -> pd.DataFrame:
+        records: List[dict] = []
+        for bench, bench_scores in scores.items():
             for test, results in bench_scores.items():
-                formatted[bench_id][test] = dict(results)
-        return formatted
+                for framework, score in results.items():
+                    records.append({
+                        "concurrency": bench.concurrency,
+                        "test": test,
+                        "framework": framework,
+                        "score": score,
+                    })
+        return pd.DataFrame(records)
 
     def clean(self):
         self._logger.info("Cleaning up…")

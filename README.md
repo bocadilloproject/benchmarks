@@ -16,7 +16,11 @@ A few things to keep in mind:
 1. Install [Docker]
 2. Clone the repo
 3. Build the image: `docker build . -t bocadillo-benchmarks`
-4. Run the container: `docker run bocadillo-benchmarks`
+4. Run the container:
+
+```bash
+docker run -v `pwd`/results:/usr/src/results bocadillo-benchmarks
+```
 
 The benchmark can be configured via `config.json`.
 
