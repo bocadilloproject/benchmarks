@@ -4,6 +4,10 @@ from typing import List
 class Config:
 
     frameworks_dir = 'frameworks'
+    virtualenvs_dir = '/virtualenvs'
+    host = '0.0.0.0'
+    port = 8000
+    warmup_seconds = 5
 
     def __init__(self, tests: List['Test'], frameworks: List['Framework']):
         self.tests = tests
