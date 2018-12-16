@@ -16,41 +16,51 @@
   "frameworks": [
     {
       "name": "Starlette",
-      "enabled": true,
+      "enabled": false,
       "requirements": [
-        "starlette",
-        "uvicorn",
-        "gunicorn"
+        "starlette==0.9.9",
+        "uvicorn==0.3.20",
+        "gunicorn==19.9.0"
       ],
       "dirname": "starlette"
     },
     {
       "name": "Bocadillo",
-      "enabled": true,
+      "enabled": false,
       "requirements": [
-        "bocadillo",
-        "gunicorn"
+        "bocadillo==0.7.0",
+        "gunicorn==19.9.0"
       ],
       "dirname": "bocadillo"
     },
     {
       "name": "Flask",
-      "enabled": true,
+      "enabled": false,
       "requirements": [
-        "flask",
-        "gunicorn",
-        "meinheld"
+        "flask==1.0.2",
+        "gunicorn==19.9.0",
+        "meinheld==0.6.1"
       ],
       "dirname": "flask"
     },
     {
       "name": "Uvicorn",
-      "enabled": true,
+      "enabled": false,
       "requirements": [
-        "uvicorn",
-        "gunicorn"
+        "uvicorn==0.3.20",
+        "gunicorn==19.9.0"
       ],
       "dirname": "uvicorn"
+    },
+    {
+      "name": "Responder",
+      "enabled": true,
+      "requirements": [
+        "responder==1.1.2",
+        "starlette==0.8.8",
+        "gunicorn==19.9.0"
+      ],
+      "dirname": "responder"
     }
   ]
 }
