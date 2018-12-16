@@ -1,0 +1,24 @@
+{
+  "tests": [
+    {
+      "name": "Hello World",
+      "filename": "hello.py"
+    }
+  ],
+  "frameworks": [
+    {
+      "name": "Flask",
+      "requirements": [
+        "flask"
+      ],
+      "dirname": "flask"
+    },
+    {
+      "name": "Bocadillo",
+      "requirements": [
+        "bocadillo"
+      ],
+      "dirname": "bocadillo"
+    }
+  ]
+}
