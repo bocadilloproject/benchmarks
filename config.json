@@ -16,7 +16,7 @@
   "frameworks": [
     {
       "name": "Starlette",
-      "enabled": false,
+      "enabled": true,
       "requirements": [
         "starlette==0.9.9",
         "uvicorn==0.3.20",
@@ -26,7 +26,7 @@
     },
     {
       "name": "Bocadillo",
-      "enabled": false,
+      "enabled": true,
       "requirements": [
         "bocadillo==0.7.0",
         "gunicorn==19.9.0"
@@ -35,7 +35,7 @@
     },
     {
       "name": "Flask",
-      "enabled": false,
+      "enabled": true,
       "requirements": [
         "flask==1.0.2",
         "gunicorn==19.9.0",
@@ -45,7 +45,7 @@
     },
     {
       "name": "Uvicorn",
-      "enabled": false,
+      "enabled": true,
       "requirements": [
         "uvicorn==0.3.20",
         "gunicorn==19.9.0"
