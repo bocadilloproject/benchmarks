@@ -31,6 +31,19 @@ class Config:
 
         return cls(tests=tests, frameworks=frameworks)
 
+    def show(self):
+        print(
+            "Selected frameworks:",
+            ", ".join((fmk.name for fmk in self.frameworks))
+        )
+        each: int = 2 * self.warmup_seconds
+        total: int = each * len(self.frameworks) * len(self.tests)
+        minutes: int = round(total / 60, 1)
+        print()
+        print(f"This will take at least {minutes} minutes to run.")
+        print("Please be patient.")
+        print(50 * "-")
+
 
 class Framework:
     def __init__(self, name: str, requirements: List[str], dirname: str):

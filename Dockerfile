@@ -1,6 +1,7 @@
 FROM python:3.6
 
 ENV ROOT_DIR /usr/src
+ENV PYTHONUNBUFFERED=1
 
 WORKDIR ${ROOT_DIR}
 RUN pip install -U pip

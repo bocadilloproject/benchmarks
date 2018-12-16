@@ -9,7 +9,9 @@
     {
       "name": "Flask",
       "requirements": [
-        "flask"
+        "flask",
+        "gunicorn",
+        "meinheld"
       ],
       "dirname": "flask"
     },
