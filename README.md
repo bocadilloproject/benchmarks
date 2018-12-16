@@ -26,6 +26,8 @@ Updated: Dec 16, 2018
 
 ### Configuration
 
+Python version: 3.6
+
 Machine:
 
 - Macbook Pro (mid-2012)
@@ -54,11 +56,12 @@ The server is called on `"/"` and should answer with a plaintext `"Hello, World!
 
 | Framework | Requests/Sec | Version |
 |:---------:|:------------:|:-------:|
-| Uvicorn | 4,407 | 0.3.20 |
-| Starlette | 3,771 | 0.9.9 |
-| Flask | 2,876 | 1.0.2 |
-| Bocadillo | 2,358 | 0.7.0 |
-| Responder | 1,241 | 1.1.2 |
+| Uvicorn | 4,593 | 0.3.20 |
+| Starlette | 3,730 | 0.9.9 |
+| Flask | 2,593 | 1.0.2 |
+| Bocadillo | 2,552 | 0.7.0 |
+| Django | 1,543 | 2.1.4 |
+| Responder | 1,262 | 1.1.2 |
 
 [Docker]: https://docs.docker.com/install/
 [Bocadillo]: https://github.com/bocadilloproject/bocadillo

@@ -15,6 +15,16 @@
   ],
   "frameworks": [
     {
+      "name": "Django",
+      "enabled": true,
+      "requirements": [
+        "django==2.1.4",
+        "gunicorn==19.9.0",
+        "meinheld==0.6.1"
+      ],
+      "dirname": "django"
+    },
+    {
       "name": "Starlette",
       "enabled": true,
       "requirements": [
