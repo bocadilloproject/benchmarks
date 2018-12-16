@@ -22,6 +22,8 @@ The benchmark can be configured via `config.json`.
 
 ## Results
 
+Updated: Dec 16, 2018
+
 ### Configuration
 
 Machine:
