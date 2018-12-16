@@ -24,32 +24,30 @@ class Runner:
         self._logger.setLevel(logging.INFO)
         handler = logging.StreamHandler()
         formatter = logging.Formatter(
-            '%(asctime)s - %(levelname)s - %(message)s')
+            "%(asctime)s - %(levelname)s - %(message)s")
         handler.setFormatter(formatter)
         self._logger.addHandler(handler)
 
-    def _run(self, command: str, timeout: int = 30,
-             pipe: bool = True) -> subprocess.Popen:
+    def _run(
+        self, command: str, timeout: int = 30, **kwargs
+    ) -> subprocess.Popen:
         self._logger.info(f"Running: %s", command)
-        kwargs = {}
-        if pipe:
-            kwargs['stdout'] = subprocess.DEVNULL
-            kwargs['stderr'] = subprocess.STDOUT
+        kwargs.setdefault("stdout", subprocess.DEVNULL)
         p = subprocess.Popen(command, shell=True, **kwargs)
         p.wait(timeout)
         return p
 
     def get_python(self, framework: Framework) -> str:
-        env_dir = framework.name.replace(' ', '_').lower()
+        env_dir = framework.name.replace(" ", "_").lower()
         env_path = join(self.config.virtualenvs_dir, env_dir)
-        python = join(env_path, 'bin', 'python3')
+        python = join(env_path, "bin", "python3")
 
         if not exists(env_path):
             self._run(f"python -m venv {env_path}")
             # Install dependencies
             pip = join(dirname(python), "pip")
             if framework.requirements:
-                packages = ' '.join(framework.requirements)
+                packages = " ".join(framework.requirements)
                 self._run(f"{pip} install -U {packages}", timeout=60)
 
         return python
@@ -108,7 +106,7 @@ class Runner:
                 f"http://{self.config.address}/ "
                 f"-d {duration}"
             )
-            p = self._run(cmd, timeout=duration + 2, pipe=True)
+            p = self._run(cmd, timeout=duration + 2, stdout=subprocess.PIPE)
             output = p.stdout.read().decode()
             return get_wrk_reqs_per_second(output)
 
