@@ -1,6 +1,6 @@
 import json
 from benchmarks.config import Config
-from benchmarks.manager import Manager
+from benchmarks.runner import Runner
 from pprint import pprint
 
 
@@ -8,8 +8,8 @@ def main():
     with open('config.json') as f:
         config = Config.from_json(json.loads(f.read()))
 
-    manager = Manager(config)
-    scores = manager.run()
+    runner = Runner(config)
+    scores = runner.run()
 
     print(50 * "=")
     pprint(scores)

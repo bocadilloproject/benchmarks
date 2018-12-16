@@ -3,7 +3,7 @@ from os.path import join, exists
 from benchmarks.config import Config
 
 
-class Manager:
+class Runner:
 
     def __init__(self, config: Config):
         self.config = config
