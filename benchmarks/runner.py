@@ -10,7 +10,7 @@ from typing import Tuple, List
 
 from psutil import Process
 
-from benchmarks.config import Config, Framework
+from benchmarks.config import Config, Framework, Bench
 from benchmarks.utils import (
     wait_online, kill_recursively, wait_offline, get_wrk_reqs_per_second,
 )
@@ -102,46 +102,56 @@ class Runner:
             finally:
                 self.wait(framework, up=False)
 
-    def benchmark(self, script: str, framework: Framework) -> int:
+    def benchmark(self, script: str, framework: Framework, bench: Bench) -> int:
         with self.server(script, framework):
-            duration = self.config.wrk_duration
             cmd = (
                 f"wrk "
-                f"-c {self.config.wrk_concurrency} "
-                f"-t {self.config.wrk_threads} "
+                f"-c {bench.concurrency} "
+                f"-t {bench.threads} "
                 f"http://{self.config.address}/ "
-                f"-d {duration}"
+                f"-d {bench.duration}"
             )
-            p = self._run(cmd, timeout=duration + 2, stdout=subprocess.PIPE)
+            p = self._run(
+                cmd, timeout=bench.duration + 2, stdout=subprocess.PIPE
+            )
             output = p.stdout.read().decode()
             return get_wrk_reqs_per_second(output)
 
     def run(self) -> dict:
-        scores = defaultdict(defaultdict)
+        scores = {}
+        num_benches = len(self.config.benches)
+        for i, bench in enumerate(self.config.benches):
+            print(15 * "=", f"Bench {i + 1} out of {num_benches}", 15 * "=")
+            bench.show()
+            bench_scores = defaultdict(defaultdict)
 
-        for framework in self.frameworks:
-            directory = join(self.config.frameworks_dir, framework.dirname)
-            if not exists(directory):
-                continue
-            print()
-            print(10 * "=", framework.name, 10 * "=")
-            print()
-            for test in self.tests:
-                print(f"Starting test: {test.name}")
+            for framework in self.frameworks:
+                directory = join(self.config.frameworks_dir, framework.dirname)
+                if not exists(directory):
+                    continue
                 print()
-                script_path = join(directory, test.filename)
-                score = self.benchmark(script_path, framework)
+                print(5 * "-", framework.name, 5 * "-")
                 print()
-                print("Score:", score)
-                scores[test.name][framework.name] = score
+                for test in self.tests:
+                    print(f"Starting test: {test.name}")
+                    print()
+                    script_path = join(directory, test.filename)
+                    score = self.benchmark(script_path, framework, bench)
+                    print("Score:", score)
+                    print()
+                    bench_scores[test.name][framework.name] = score
+
+            scores[bench.id] = bench_scores
 
         return self.format_scores(scores)
 
     @staticmethod
-    def format_scores(scores: defaultdict) -> dict:
+    def format_scores(scores: dict) -> dict:
         formatted = {}
-        for test, results in scores.items():
-            formatted[test] = dict(results)
+        for bench_id, bench_scores in scores.items():
+            formatted[bench_id] = {}
+            for test, results in bench_scores.items():
+                formatted[bench_id][test] = dict(results)
         return formatted
 
     def clean(self):

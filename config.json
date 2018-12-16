@@ -1,12 +1,21 @@
 {
   "host": "0.0.0.0",
   "port": 8000,
-  "wrk_concurrency": 400,
-  "wrk_duration": 15,
-  "wrk_threads": 12,
   "frameworks_dir": "frameworks",
   "virtualenvs_dir": "/virtualenvs",
   "warmup_seconds": 2,
+  "wrk": [
+    {
+      "concurrency": 10,
+      "threads": 4,
+      "duration": 15
+    },
+    {
+      "concurrency": 4000,
+      "threads": 4,
+      "duration": 15
+    }
+  ],
   "tests": [
     {
       "name": "Hello World",
