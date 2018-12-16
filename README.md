@@ -22,7 +22,42 @@ The benchmark can be configured via `config.json`.
 
 ## Results
 
-> TODO
+### Configuration
+
+Machine:
+
+- Macbook Pro (mid-2012)
+- 2.5GHz Intel Core i5
+- 2 Docker-dedicated CPU cores
+
+[wrk] parameters:
+
+- Concurrency: 400
+- Threads: 12
+- Duration: 15s
+- Warm up/Cool down: 2s
+
+Web servers:
+
+- ASGI frameworks run with Gunicorn (19.9.0) + Uvicorn (0.3.20)
+- WSGI run with Gunicorn (19.9.0) + Meinheld (0.6.1).
+
+### Tests
+
+#### Hello, World!
+
+Test how fast the framework can provide a static response.
+
+The server is called on `"/"` and should answer with a plaintext `"Hello, World!"` response.
+
+| Framework | Requests/Sec | Version |
+|:---------:|:------------:|:-------:|
+| Uvicorn | 4,407 | 0.3.20 |
+| Starlette | 3,771 | 0.9.9 |
+| Flask | 2,876 | 1.0.2 |
+| Bocadillo | 2,358 | 0.7.0 |
+| Responder | 1,241 | 1.1.2 |
 
 [Docker]: https://docs.docker.com/install/
 [Bocadillo]: https://github.com/bocadilloproject/bocadillo
+[wrk]: https://github.com/wg/wrk
