@@ -122,7 +122,7 @@ class Runner:
         scores = {}
         num_benches = len(self.config.benches)
         for i, bench in enumerate(self.config.benches):
-            print(15 * "=", f"Bench {i + 1} out of {num_benches}", 15 * "=")
+            print(15 * "=", f"Bench {i + 1} of {num_benches}", 15 * "=")
             bench.show()
             bench_scores = defaultdict(defaultdict)
 
@@ -136,8 +136,13 @@ class Runner:
                 for test in self.tests:
                     print(f"Starting test: {test.name}")
                     print()
-                    script_path = join(directory, test.filename)
-                    score = self.benchmark(script_path, framework, bench)
+                    test_scores = []
+                    for r in range(self.config.rounds):
+                        print("Round", r + 1, "of", self.config.rounds)
+                        script_path = join(directory, test.filename)
+                        score = self.benchmark(script_path, framework, bench)
+                        test_scores.append(score)
+                    score = sum(test_scores) / len(test_scores)
                     print("Score:", score)
                     print()
                     bench_scores[test.name][framework.name] = score

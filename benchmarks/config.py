@@ -14,6 +14,7 @@ class Config:
         host: str,
         port: int,
         warmup_seconds: int,
+        rounds: int,
     ):
         self.tests = tests
         self.frameworks = frameworks
@@ -23,6 +24,7 @@ class Config:
         self.host = host
         self.port = port
         self.warmup_seconds = warmup_seconds
+        self.rounds = rounds
 
     @property
     def address(self) -> str:
@@ -43,6 +45,8 @@ class Config:
         benches = []
         for obj in json.pop("wrk", []):
             benches.append(Bench(**obj))
+
+        json.setdefault("rounds", 1)
 
         return cls(tests=tests, frameworks=frameworks, benches=benches, **json)
 

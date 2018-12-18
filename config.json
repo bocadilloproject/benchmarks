@@ -3,7 +3,7 @@
   "port": 8000,
   "frameworks_dir": "frameworks",
   "virtualenvs_dir": "/virtualenvs",
-  "warmup_seconds": 2,
+  "warmup_seconds": 5,
   "wrk": [
     {
       "concurrency": 10,
@@ -16,6 +16,7 @@
       "duration": 15
     }
   ],
+  "rounds": 3,
   "tests": [
     {
       "name": "Hello World",
