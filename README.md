@@ -70,7 +70,7 @@ Test how fast the framework can provide a static response.
 
 The server is called on `"/"` and should answer with a plaintext `"Hello, World!"` response.
 
-![](results/2018-12-23_19-07-59.png)
+![](plots/2018-12-23_19-07-59.png)
 
 [Docker]: https://docs.docker.com/install/
 [Bocadillo]: https://github.com/bocadilloproject/bocadillo
