@@ -13,7 +13,7 @@ def main(filename):
     data = load(filename)
     sns.set(style="whitegrid")
     g = sns.catplot(x="framework", y="score", hue="concurrency", data=data,
-                    height=6, kind="bar", palette="muted")
+                    height=6, kind="bar")
     g.despine(left=True)
     g.set_ylabels("Requests/sec")
     plt.show()

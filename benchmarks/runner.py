@@ -142,7 +142,7 @@ class Runner:
                         script_path = join(directory, test.filename)
                         score = self.benchmark(script_path, framework, bench)
                         test_scores.append(score)
-                    score = sum(test_scores) / len(test_scores)
+                    score = max(test_scores)
                     print("Score:", score)
                     print()
                     bench_scores[test.name][framework.name] = score
