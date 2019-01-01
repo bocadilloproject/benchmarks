@@ -64,6 +64,8 @@ Versions used:
 
 ### Tests
 
+The higher, the better.
+
 #### Hello, World!
 
 Test how fast the framework can provide a static response.
